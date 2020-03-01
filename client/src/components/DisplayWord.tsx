@@ -85,7 +85,7 @@ function MisspelledWord(props) {
 
     const baseStyle = {
         padding: '3px',
-        margin: '0 5px 0 5px',
+        marginRight: '1px',
         cursor: props.readOnly ? 'default' : 'pointer',
     };
 

@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import DisplayWord from "./DisplayWord";
+import {makeStyles} from "@material-ui/core";
+
+const useStyles = makeStyles({
+    documentPreview: {
+        lineHeight: '2em',
+    },
+});
 
 function splitSentenceIntoWords(sentence: string): string[] {
     const normalizedWhitespaces = sentence.replace(/\r?\n|\r/, ' ').replace(/\s\s+/g, ' ');
@@ -8,6 +15,7 @@ function splitSentenceIntoWords(sentence: string): string[] {
 
 function DocumentPreview(props) {
     const [words, setWords] = useState([]);
+    const classes = useStyles();
 
     useEffect(() => {
         if (!props.value) {
@@ -47,7 +55,7 @@ function DocumentPreview(props) {
     };
 
     return (
-        <p>{words.map((word, idx) => (
+        <p className={classes.documentPreview}>{words.map((word, idx) => (
             <DisplayWord {...wordComponentParams(word, props.misspelledWords)} value={word} key={idx} />
         ))}</p>
     )
