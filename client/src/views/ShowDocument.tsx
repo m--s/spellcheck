@@ -4,11 +4,13 @@ import {useHistory, useParams} from "react-router";
 import DocumentPreview from "../components/DocumentPreview";
 import {ApplySuggestionsDto} from "../../../spellcheck-api/src/documents/dto/applySuggestions.dto";
 import api from "../api";
+import Loader from "../components/Loader";
 
 
 function ShowDocument() {
     const {documentId} = useParams();
     const history = useHistory();
+    const [isLoading, setLoading] = React.useState(true);
 
     const [document, setDocument] = useState({misspelledWords: [], accepted: false});
 
@@ -19,10 +21,14 @@ function ShowDocument() {
     };
 
     useEffect(() => {
+        setLoading(true);
+
         api.fetchDocument(documentId)
             .then(resp => resp.json())
             .then(resp => {
                 setDocument(resp);
+
+                setLoading(false);
 
                 const chosenSuggestionsMap = {};
 
@@ -42,6 +48,7 @@ function ShowDocument() {
             documentId,
             suggestionIds,
         };
+        setLoading(true);
 
         return api.applySuggestions(body);
     };
@@ -61,6 +68,7 @@ function ShowDocument() {
         } else {
             applySuggestions(+documentId, suggestionIds).then(() => {
                 setDocument({...document, accepted: true});
+                setLoading(false);
                 download();
             });
         }
@@ -74,23 +82,26 @@ function ShowDocument() {
             <Typography variant="h2">
                 Document preview
             </Typography>
-            <Paper>
-                <Box p={5}>
-                    <DocumentPreview value={document.body} readOnly={document.accepted}
-                                     misspelledWords={document.misspelledWords}
-                                     onSuggestionSelected={onSuggestionSelected}
-                                     chosenSuggestions={chosenSuggestions}/>
-                </Box>
-            </Paper>
 
-            <Box p={1}>
-                <Button variant="contained" color="primary" onClick={saveDocument}>
-                    { saveButtonText }
-                </Button>
-                <Button onClick={() => history.push(`/`)}>
-                    New document
-                </Button>
-            </Box>
+            <Loader loading={isLoading}>
+                <Paper>
+                    <Box p={5}>
+                        <DocumentPreview value={document.body} readOnly={document.accepted}
+                                         misspelledWords={document.misspelledWords}
+                                         onSuggestionSelected={onSuggestionSelected}
+                                         chosenSuggestions={chosenSuggestions}/>
+                    </Box>
+                </Paper>
+
+                <Box p={1}>
+                    <Button variant="contained" color="primary" onClick={saveDocument}>
+                        { saveButtonText }
+                    </Button>
+                    <Button onClick={() => history.push(`/`)}>
+                        New document
+                    </Button>
+                </Box>
+            </Loader>
         </div>
     );
 }
