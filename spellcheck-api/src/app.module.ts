@@ -1,5 +1,6 @@
 import {Module} from '@nestjs/common';
 import {SpellcheckModule} from './spellcheck/spellcheck.module';
+import {DocumentsModule} from './documents/documents.module';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import * as dotenv from 'dotenv';
 
@@ -18,8 +19,8 @@ dotenv.config();
             synchronize: true,
             logging: false,
         }),
-        SpellcheckModule,
-    ],
+
+        SpellcheckModule, DocumentsModule],
 })
 export class AppModule {
 }
