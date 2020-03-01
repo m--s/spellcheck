@@ -22,10 +22,8 @@ function DocumentPreview(props) {
             setWords([]);
             return
         }
-        const parsed = props.value.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
-            return '&#' + i.charCodeAt(0) + ';';
-        });
-        const splitted = splitSentenceIntoWords(parsed);
+
+        const splitted = splitSentenceIntoWords(props.value);
         setWords(splitted);
 
     }, [props.value]);
