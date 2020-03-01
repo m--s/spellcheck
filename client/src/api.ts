@@ -23,7 +23,7 @@ const download = (documentId) => {
 };
 
 const applySuggestions = (suggestions: ApplySuggestionsDto) => {
-    return fetch(`http://localhost:3000/document/applySuggestions`, {
+    return fetch(`${BASE_URL}/document/applySuggestions`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
